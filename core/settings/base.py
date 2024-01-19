@@ -28,6 +28,15 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
+INSTALLED_APPS = [
+    "django_resized"
+]
+
+LOCAL_APPS = [
+    "apps.common",
+    "apps.course",
+]
+
 INSTALLED_APPS = DJANGO_APPS
 
 MIDDLEWARE = [
