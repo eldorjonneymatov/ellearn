@@ -18,7 +18,6 @@ ALLOWED_HOSTS = str(os.getenv("ALLOWED_HOSTS")).split(",")
 
 
 # Application definition
-
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -29,7 +28,9 @@ DJANGO_APPS = [
 ]
 
 INSTALLED_APPS = [
-    "django_resized"
+    "django_resized",
+    "djrichtextfield",
+    "ckeditor"
 ]
 
 LOCAL_APPS = [
@@ -37,7 +38,7 @@ LOCAL_APPS = [
     "apps.course",
 ]
 
-INSTALLED_APPS = DJANGO_APPS
+INSTALLED_APPS += DJANGO_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -130,3 +131,25 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Richtext field
+DJRICHTEXTFIELD_CONFIG = {
+    'js': ['//cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js'],
+    'init_template': 'djrichtextfield/init/tinymce.js',
+    'settings': {
+        'menubar': False,
+        'plugins': 'link image',
+        'toolbar': 'bold italic | link image | removeformat',
+        'width': 700
+    }
+}
+
+# CKEditor
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
+CKEDITOR_CONFIGS = {
+    'awesome_ckeditor': {
+        'toolbar': 'Basic',
+    },
+}
