@@ -3,6 +3,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from core.ckeditor_conf import *  # noqa
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,11 +29,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-INSTALLED_APPS = [
-    "django_resized",
-    "djrichtextfield",
-    "ckeditor"
-]
+INSTALLED_APPS = ["django_resized", "djrichtextfield", "ckeditor"]
 
 LOCAL_APPS = [
     "apps.common",
@@ -134,22 +132,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Richtext field
 DJRICHTEXTFIELD_CONFIG = {
-    'js': ['//cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js'],
-    'init_template': 'djrichtextfield/init/tinymce.js',
-    'settings': {
-        'menubar': False,
-        'plugins': 'link image',
-        'toolbar': 'bold italic | link image | removeformat',
-        'width': 700
-    }
-}
-
-# CKEditor
-CKEDITOR_UPLOAD_PATH = 'uploads/'
-CKEDITOR_IMAGE_BACKEND = 'pillow'
-CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
-CKEDITOR_CONFIGS = {
-    'awesome_ckeditor': {
-        'toolbar': 'Basic',
+    "js": ["//cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"],
+    "init_template": "djrichtextfield/init/tinymce.js",
+    "settings": {
+        "menubar": False,
+        "plugins": "link image",
+        "toolbar": "bold italic | link image | removeformat",
+        "width": 700,
     },
 }
