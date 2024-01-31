@@ -29,12 +29,9 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-INSTALLED_APPS = ["django_resized", "djrichtextfield", "ckeditor"]
+INSTALLED_APPS = ["django_resized", "ckeditor", "rest_framework", "rest_framework_simplejwt"]
 
-LOCAL_APPS = [
-    "apps.common",
-    "apps.course",
-]
+LOCAL_APPS = ["apps.common", "apps.course", "apps.users"]
 
 INSTALLED_APPS += DJANGO_APPS + LOCAL_APPS
 
@@ -130,14 +127,29 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Richtext field
-DJRICHTEXTFIELD_CONFIG = {
-    "js": ["//cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"],
-    "init_template": "djrichtextfield/init/tinymce.js",
-    "settings": {
-        "menubar": False,
-        "plugins": "link image",
-        "toolbar": "bold italic | link image | removeformat",
-        "width": 700,
-    },
+# Rest Framework
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
+    "EXCEPTION_HANDLER": "utils.exception_handler.custom_exception_handler",
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
 }
+
+# Auth
+AUTH_USER_MODEL = "users.User"
+
+# Email
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+SERVER_EMAIL = os.getenv("SERVER_EMAIL")
+
+# OTP Settings
+OTP_VALIDITY = 2  # minutes

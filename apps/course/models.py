@@ -11,31 +11,27 @@ from django_resized import ResizedImageField
 from apps.common.models import TimeStampedModel
 from apps.common.utils import calculate_reading_time, get_video_length
 from apps.course.choices import CourseStatusChoices, LanguageChoices
-from apps.course.managers import PublishedManager
+from apps.course.managers import (InstructorManager, PublishedManager,
+                                  StudentManager)
+from apps.users.models import Profile
 
 
-class Instructor(TimeStampedModel):
-    full_name = models.CharField(_("Full Name"), max_length=255)
-    title = models.CharField(_("Title"), max_length=255)
-    avatar = ResizedImageField(
-        _("Avatar"), size=[240, 240], crop=["middle", "center"], quality=90, upload_to="course/instructor/avatars"
-    )
-    description = models.TextField(_("Description"))
-    website = models.URLField(_("Website"), blank=True, null=True)
-    facebook = models.URLField(_("Facebook"), blank=True, null=True)
-    twitter = models.URLField(_("Twitter"), blank=True, null=True)
-    linkedin = models.URLField(_("Linkedin"), blank=True, null=True)
-    telegram = models.URLField(_("Telegram"), blank=True, null=True)
-    total_course_taught = models.PositiveIntegerField(_("Total Course Taught"), default=0)
+class Student(Profile):
+    objects = StudentManager()
 
     class Meta:
-        db_table = "course_instructors"
+        proxy = True
+        verbose_name = _("Student")
+        verbose_name_plural = _("Students")
+
+
+class Instructor(Profile):
+    objects = InstructorManager()
+
+    class Meta:
+        proxy = True
         verbose_name = _("Course Instructor")
         verbose_name_plural = _("Course Instructors")
-        ordering = ("full_name",)
-
-    def __str__(self):
-        return self.full_name
 
 
 class Category(TimeStampedModel):
