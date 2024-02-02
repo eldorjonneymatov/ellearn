@@ -2,7 +2,6 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.users.api.auth.VerifySignUp.serializers import VerifySignUpSerializer
 from apps.users.models import User
@@ -24,7 +23,7 @@ class VerifySignUpView(GenericAPIView):
                 email=temp_user.email, password=temp_user.password, full_name=temp_user.full_name
             )
             temp_user.delete()
-            refresh = RefreshToken.for_user(user)
-            return Response({"refresh": str(refresh), "access": str(refresh.access_token)}, status=status.HTTP_200_OK)
+            tokens = user.get_tokens()
+            return Response(tokens, status=status.HTTP_200_OK)
         else:
             raise ValidationError(serializer.errors, code="invalid")

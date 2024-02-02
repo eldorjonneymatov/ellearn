@@ -3,7 +3,6 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import LogInSerializer
 
@@ -21,7 +20,7 @@ class LogInView(GenericAPIView):
             user = User.objects.filter(email=email)
             if not user.exists() or not user.first().check_password(password):
                 raise ValidationError({"credentials": "Username or password is wrong."}, code="invalid")
-            refresh = RefreshToken.for_user(user.first())
-            return Response({"refresh": str(refresh), "access": str(refresh.access_token)}, status=status.HTTP_200_OK)
+            tokens = user.first().get_tokens()
+            return Response(tokens, status=status.HTTP_200_OK)
         else:
             raise ValidationError(serializer.errors, code="invalid")

@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_resized import ResizedImageField
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.common.models import TimeStampedModel
 from apps.users.choices import ProfileRoleChoices
@@ -28,6 +29,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+    def get_tokens(self):
+        refresh = RefreshToken.for_user(self)
+        return {"refresh": str(refresh), "access": str(refresh.access_token)}
 
 
 class Profile(TimeStampedModel):

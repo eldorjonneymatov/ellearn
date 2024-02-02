@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from apps.users.api.auth.ChangePassword.serializers import \
     ChangePasswordSerializer
 from apps.users.models import TemporaryUser
-from apps.users.utils import send_verification_code
+from apps.users.tasks import send_verification_code
 
 User = get_user_model()
 
@@ -30,7 +30,8 @@ class ChangePasswordView(GenericAPIView):
                 raise ValidationError(error, code="invalid")
             session = "".join(random.choices(string.ascii_uppercase + string.digits, k=24))
             hashed_password = make_password(password)
-            code = send_verification_code(email)
+            code = "".join(random.choices(string.ascii_uppercase, k=6))
+            send_verification_code.delay(email, code)
             TemporaryUser.objects.create(password=hashed_password, session=session, verification_code=code, email=email)
             return Response({"session": session}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

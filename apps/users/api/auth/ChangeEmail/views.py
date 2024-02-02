@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.users.models import TemporaryUser
-from apps.users.utils import send_verification_code
+from apps.users.tasks import send_verification_code
 
 from .serializers import ChangeEmailSerializer
 
@@ -31,7 +31,8 @@ class ChangeEmailView(GenericAPIView):
             if User.objects.filter(email=email).exists():
                 raise ValidationError({"email": "Email is already taken."}, code="invalid")
             session = "".join(random.choices(string.ascii_uppercase + string.digits, k=18))
-            code = send_verification_code(email)
+            code = "".join(random.choices(string.ascii_uppercase, k=6))
+            send_verification_code.delay(email, code)
             TemporaryUser.objects.create(
                 session=session,
                 verification_code=code,
